@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
+import { useRouter } from 'found';
 import { createFragmentContainer, graphql } from 'react-relay';
+
+import { addItem } from '../../mutations/AddItemMutation';
 
 import { AddItem_group } from './__generated__/AddItem_group.graphql';
 
@@ -12,10 +15,24 @@ const AddItemView: React.FC<Props> = ({ group }) => {
 	const [name, setName] = useState('');
 	const [amount, setAmount] = useState(0);
 
+	const { router } = useRouter();
+
 	return (
 		<form
 			onSubmit={e => {
 				e.preventDefault();
+				addItem({
+					variables: {
+						input: {
+							name,
+							amount,
+							group: group.id,
+						},
+					},
+					onCompleted: () => {
+						router.replace(`/groups/${group.id}`);
+					},
+				});
 			}}
 		>
 			<h2>Add item for {group.name}</h2>

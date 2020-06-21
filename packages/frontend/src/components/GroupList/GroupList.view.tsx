@@ -1,70 +1,41 @@
 import React from 'react';
 
 import { createFragmentContainer, graphql } from 'react-relay';
+import styled from 'styled-components';
 
 import { GroupCard } from '../GroupCard';
 
-import { GroupList_viewer } from './__generated__/GroupList_viewer.graphql';
+import { GroupList_groups } from './__generated__/GroupList_groups.graphql';
 
 interface Props {
-	viewer: GroupList_viewer;
+	groups: GroupList_groups;
 }
 
-const GroupListView: React.FC<Props> = ({ viewer }) => {
-	if (!viewer.user) {
-		return (
-			<React.Fragment>
-				{viewer.groups.edges.map(edge => (
-					<GroupCard key={edge.node.id} group={edge.node} />
-				))}
-			</React.Fragment>
-		);
-	}
+const GroupListWrapper = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	column-gap: 16px;
+	row-gap: 16px;
+	padding: 16px 0;
+`;
 
-	const otherGroups = viewer.groups.edges.filter(
-		edge => !viewer.user?.groups.edges.find(e => e.node.id === edge.node.id),
-	);
+const GroupListView: React.FC<Props> = ({ groups }) => {
 	return (
-		<React.Fragment>
-			<h2>My groups</h2>
-			<ul>
-				{viewer.user.groups.edges.map(edge => (
-					<GroupCard key={edge.node.id} group={edge.node} />
-				))}
-			</ul>
-			{otherGroups.length > 0 && (
-				<React.Fragment>
-					<h2>Other groups</h2>
-					<ul>
-						{otherGroups.map(edge => (
-							<GroupCard key={edge.node.id} group={edge.node} />
-						))}
-					</ul>
-				</React.Fragment>
-			)}
-		</React.Fragment>
+		<GroupListWrapper>
+			{groups.edges.map(edge => (
+				<GroupCard key={edge.node.id} group={edge.node} />
+			))}
+		</GroupListWrapper>
 	);
 };
 
 export default createFragmentContainer(GroupListView, {
-	viewer: graphql`
-		fragment GroupList_viewer on Viewer {
-			groups {
-				edges {
-					node {
-						id
-						...GroupCard_group
-					}
-				}
-			}
-			user {
-				groups {
-					edges {
-						node {
-							id
-							...GroupCard_group
-						}
-					}
+	groups: graphql`
+		fragment GroupList_groups on GroupConnection {
+			edges {
+				node {
+					id
+					...GroupCard_group
 				}
 			}
 		}

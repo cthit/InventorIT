@@ -28,10 +28,24 @@ export const routeConfig = makeRouteConfig(
 				query={graphql`
 					query routes_GroupList_Query {
 						viewer {
-							...GroupList_viewer
+							groups {
+								...GroupList_groups
+							}
 						}
 					}
 				`}
+				render={({ props }) => {
+					if (props) {
+						// TODO generics for Route
+						if ((props as any).viewer.groups) {
+							return <GroupList groups={(props as any).viewer.groups} />;
+						}
+
+						return <div>No groups</div>;
+					}
+
+					return <div>Loading...</div>;
+				}}
 			/>
 			<Route path=":groupId">
 				<Route
