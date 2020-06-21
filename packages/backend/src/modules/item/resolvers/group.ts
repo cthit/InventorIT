@@ -7,7 +7,11 @@ const resolvers: ItemModuleResolversType = {
 		items: async ({ id }, args, { injector }) => {
 			const items = await injector.get(ItemProvider).getItemsByGroupId(id);
 
-			return connectionFromArray(items, args);
+			try {
+				return connectionFromArray(items, args);
+			} catch (error) {
+				return null;
+			}
 		},
 	},
 };

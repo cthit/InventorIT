@@ -7,7 +7,11 @@ const resolvers: GroupModuleResolversType = {
 		groups: async (_parent, input, { injector }) => {
 			const groups = await injector.get(GroupProvider).getGroups();
 
-			return connectionFromArray(groups, input);
+			try {
+				return connectionFromArray(groups, input);
+			} catch (error) {
+				return null;
+			}
 		},
 	},
 };
