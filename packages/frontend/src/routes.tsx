@@ -36,8 +36,9 @@ export const routeConfig = makeRouteConfig(
 				`}
 				render={({ props }) => {
 					if (props) {
-						if (props.viewer.groups) {
-							return <GroupList groups={props.viewer.groups} />;
+						// TODO generics for Route
+						if ((props as any).viewer.groups) {
+							return <GroupList groups={(props as any).viewer.groups} />;
 						}
 
 						return <div>No groups</div>;
