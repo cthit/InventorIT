@@ -114,7 +114,7 @@ interface GammaSuperGroup {
 					const groupRepository = getRepository(Group);
 					await Promise.all(
 						profile.groups.map(async gammaGroup => {
-							if (gammaGroup.superGroup.type !== 'COMMITTEE' || !user) {
+							if ((gammaGroup.superGroup.type !== 'COMMITTEE' && gammaGroup.superGroup.type !== 'SOCIETY') || !user) {
 								return;
 							}
 

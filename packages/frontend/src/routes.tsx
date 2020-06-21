@@ -35,7 +35,15 @@ export const routeConfig = makeRouteConfig(
 					}
 				`}
 				render={({ props }) => {
-					return props ? <GroupList groups={props.viewer.groups} /> : <div>Error</div>;
+					if (props) {
+						if (props.viewer.groups) {
+							return <GroupList groups={props.viewer.groups} />;
+						}
+
+						return <div>No groups</div>;
+					}
+
+					return <div>Loading...</div>;
 				}}
 			/>
 			<Route path=":groupId">
